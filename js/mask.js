@@ -27,102 +27,33 @@ function findMaskByType(type) {
 const inputs = document.querySelectorAll("input.mask");
 for (let i = 0; i < inputs.length; i++) {
   var typeMask = inputs[i].className.split(" ")[1];
+  console.log("mask: " + typeMask)
   let mask = findMaskByType(typeMask);
-  // inputs[i].addEventListener("keypress", (event) =>
-  //   blockNotNumeric(event, mask)
-  // );
-  inputs[i].addEventListener("focus", () => handleFocus(inputs[i], mask));
-  inputs[i].addEventListener("click", () => handleClick(inputs[i]));
-  inputs[i].addEventListener("input", (event) => {
-    const valorDigitado = event.target.value;
-    // if (!/^[0-9]+$/.test(valorDigitado)) {
-    //   return;
-    // }
-    const novoFormatoCpf = formatarCpf(valorDigitado);
-    // console.log(novoFormatoCpf);
-    // inputs[i].value = novoFormatoCpf;
-  });
-  // inputs[i].addEventListener("blur", () => handleMask(inputs[i], mask));
+  let formattedMask = mask.replaceAll("9", "_");
+  inputs[i].addEventListener("keypress", (event) =>
+    handleInput(event, inputs[i])
+  );
+  inputs[i].addEventListener("focus", () =>
+    handleFocus(formattedMask, inputs[i])
+  );
 }
 
-function formatarCpf(valor) {
-  console.log(valor);
-  let novoValor = "";
-  let indiceMascara = 0;
-console.log(inputFocusValue)
-  for (let i = 0; i < valor.length; i++) {
-    if (inputFocusValue[indiceMascara] !== "_") {
-      novoValor += inputFocusValue[indiceMascara];
-      indiceMascara++;
-    }
-
-    novoValor += valor[i];
-  }
-  console.log(novoValor);
-
-  return novoValor;
+function handleFocus(formattedMask, input) {
+  input.value = formattedMask;
 }
-
-function handleFocus(input, mask) {
-  input.value = mask.replaceAll("9", "_");
-  inputFocusValue = input.value;
-}
-
-function handleClick(input) {
+function handleInput(event, input) {
   input.selectionStart = 0;
   input.selectionEnd = 0;
-}
-
-function handleInput(event, mask) {
-  // let input = event.target;
-  // let inputValue = input.value;
-  // let maskedValue = mask.replace(/9/g, "_");
-  // let finalValue = "";
-  // let j = 0;
-  // let cursorPosition = input.selectionStart;
-  // for (let i = 0; i < mask.length; i++) {
-  //    if (mask[i] === "9" && j < inputValue.length) {
-  //      finalValue += inputValue[j++];
-  //    } else {
-  //      finalValue += mask[i];
-  //    }
-  // }
-  // console.log(finalValue);
-  // if (cursorPosition < inputValue.length) {
-  //    input.selectionStart = cursorPosition;
-  //    input.selectionEnd = cursorPosition;
-  // } else {
-  //    input.selectionStart = finalValue.length;
-  //    input.selectionEnd = finalValue.length;
-  // }
-}
-
-function blockNotNumeric(event, mask) {
-  let countNines = mask.split("").filter((char) => char === "9").length;
-  const inputElement = event.target.value + String.fromCharCode(event.keyCode);
-  const inputChar = String.fromCharCode(event.keyCode);
-  if (!/^\d+$/.test(inputChar)) {
-    event.preventDefault();
-  }
-  if (countNines !== 0 && inputElement.length === countNines + 1) {
-    event.preventDefault();
-  }
-}
-
-function handleMask(input, mask) {
-  let value = input.value.replace(/\D/g, "");
-  let maskedValue = "";
-  let j = 0;
-  for (let i = 0; i < mask.length; i++) {
-    if (mask[i] === "9" && j < value.length) {
-      maskedValue += value[j++];
-    } else if (mask[i] === "9" && j >= value.length) {
-      break;
-    } else {
-      maskedValue += mask[i];
+  let currentValue = input.value;
+  let enteredValue = String.fromCharCode(event.which || event.keyCode);
+  if (/^\d$/.test(enteredValue)) {
+    let nextIndex = currentValue.indexOf("_");
+    if (nextIndex !== -1) {
+      input.value =
+        currentValue.substring(0, nextIndex) +
+        enteredValue +
+        currentValue.substring(nextIndex + 1);
     }
   }
-  if (input.value !== "") {
-    input.value = maskedValue;
-  }
+  event.preventDefault();
 }
