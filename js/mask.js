@@ -37,6 +37,21 @@ function getTypeMask(valueFinded) {
 }
 
 function initializeInputs() {
+  let container = document.querySelector(".container");
+  for (let mask of allMasks) {
+    let chave = Object.keys(mask)[0];
+    let div = document.createElement("div");
+    div.classList.add("mask__input__box");
+    let span = document.createElement("span");
+    div.appendChild(span);
+    let input = document.createElement("input");
+    input.classList.add("mask");
+    input.classList.add(chave);
+    input.type = "search";
+    div.appendChild(input);
+    container.appendChild(div);
+  }
+
   const label = document.querySelectorAll("input.mask");
   const inputs = document.querySelectorAll("input.mask");
   inputs.forEach((input) => {

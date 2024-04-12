@@ -27,13 +27,13 @@ body {
 
 .container {
   width: 100vw;
-  height: 100vh;
+  height: 50vh;
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   padding: 1.5rem;
-  gap: 6rem;
+  gap: 2rem;
 }
 
 .mask {
