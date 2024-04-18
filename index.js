@@ -41,12 +41,6 @@ function initializeInputs() {
   const inputs = document.querySelectorAll("input.mask");
   inputs.forEach((input) => {
     const typeMask = getTypeMask(input.className);
-    const spanElement = input
-      .closest(".mask__input__box")
-      .querySelector("span");
-    if (spanElement) {
-      spanElement.textContent = typeMask;
-    }
     const mask = findMaskByType(typeMask);
     const formattedMask = mask.replaceAll("9", "_");
     input.value = formattedMask;
@@ -107,4 +101,7 @@ function handleFocus(formattedMask, input) {
     input.value = formattedMask;
   }
 }
-document.addEventListener("DOMContentLoaded", initializeInputs);
+
+document.addEventListener("DOMContentLoaded",initializeInputs)
+
+export default initializeInputs;
