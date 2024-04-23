@@ -20,11 +20,6 @@ html {
   font-size: 62.5%;
 }
 
-body {
-  width: 100vw;
-  height: 100vh;
-}
-
 .container {
   width: 100vw;
   height: 100vh;
@@ -37,7 +32,7 @@ body {
 }
 
 .mask {
-  width: 250px;
+  width: 200px;
   height: 48px;
   outline: none;
   font-size: 1.6rem;

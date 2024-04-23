@@ -40,16 +40,31 @@ function initializeInputs() {
   const label = document.querySelectorAll("input.mask");
   const inputs = document.querySelectorAll("input.mask");
   inputs.forEach((input) => {
-    const typeMask = getTypeMask(input.className);
-    const mask = findMaskByType(typeMask);
-    const formattedMask = mask.replaceAll("9", "_");
-    input.value = formattedMask;
-    input.addEventListener("keydown", handleKeyDown);
-    input.addEventListener("keyup", handleKeyUp);
-    input.addEventListener("focus", () => handleFocus(formattedMask, input));
-    input.addEventListener("input", (event) =>
-      applyMaskOnInputChange(event, formattedMask)
-    );
+    if(input.className.includes("custom")){
+      const regex = /\[(.*?)\]/g;
+      const matches = input.className.match(regex);
+      const mask = matches[0].slice(1, -1);
+      const formattedMask = mask.replaceAll("9", "_");
+      input.value = formattedMask;
+      input.addEventListener("keydown", handleKeyDown);
+      input.addEventListener("keyup", handleKeyUp);
+      input.addEventListener("focus", () => handleFocus(formattedMask, input));
+      input.addEventListener("input", (event) =>
+        applyMaskOnInputChange(event, formattedMask)
+      );
+    }
+    else{
+      const typeMask = getTypeMask(input.className);
+      const mask = findMaskByType(typeMask);
+      const formattedMask = mask.replaceAll("9", "_");
+      input.value = formattedMask;
+      input.addEventListener("keydown", handleKeyDown);
+      input.addEventListener("keyup", handleKeyUp);
+      input.addEventListener("focus", () => handleFocus(formattedMask, input));
+      input.addEventListener("input", (event) =>
+        applyMaskOnInputChange(event, formattedMask)
+      );
+    }    
   });
 }
 
