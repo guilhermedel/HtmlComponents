@@ -1,6 +1,6 @@
 {
   "name": "@guilhermedevtype/dtcomponents",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "This is a library for htmlcss components using javascript",
   "main": "./dist/index.min.js",
   "type": "module",
