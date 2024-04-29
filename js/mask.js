@@ -119,4 +119,4 @@ function handleFocus(formattedMask, input) {
 
 document.addEventListener("DOMContentLoaded",initializeInputs)
 
-export default initializeInputs;
+module.exports = initializeInputs;
