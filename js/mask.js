@@ -40,7 +40,7 @@ function initializeInputs() {
   const label = document.querySelectorAll("input.mask");
   const inputs = document.querySelectorAll("input.mask");
   inputs.forEach((input) => {
-    if(input.className.includes("custom")){
+    if (input.className.includes("custom")) {
       const regex = /\[(.*?)\]/g;
       const matches = input.className.match(regex);
       const mask = matches[0].slice(1, -1);
@@ -48,24 +48,46 @@ function initializeInputs() {
       input.value = formattedMask;
       input.addEventListener("keydown", handleKeyDown);
       input.addEventListener("keyup", handleKeyUp);
+      input.addEventListener("keypress", handleKeyPress);
       input.addEventListener("focus", () => handleFocus(formattedMask, input));
       input.addEventListener("input", (event) =>
         applyMaskOnInputChange(event, formattedMask)
       );
-    }
-    else{
+    } else {
       const typeMask = getTypeMask(input.className);
       const mask = findMaskByType(typeMask);
       const formattedMask = mask.replaceAll("9", "_");
       input.value = formattedMask;
       input.addEventListener("keydown", handleKeyDown);
       input.addEventListener("keyup", handleKeyUp);
+      input.addEventListener("keypress", handleKeyPress);
       input.addEventListener("focus", () => handleFocus(formattedMask, input));
       input.addEventListener("input", (event) =>
         applyMaskOnInputChange(event, formattedMask)
       );
-    }    
+    }
   });
+}
+
+function handleKeyPress(event) {
+  if (event.key === "Backspace") {
+    const currentValue = input.value;
+    const cursorPosition = parseInt(input.dataset.cursorPosition, 10);
+    if (cursorPosition > 0) {
+      const charBeforeCursor = currentValue.charAt(cursorPosition - 1);
+      if (/^\d$/.test(charBeforeCursor) || charBeforeCursor === "_") {
+        input.value =
+          currentValue.substring(0, cursorPosition - 1) +
+          "_" +
+          currentValue.substring(cursorPosition);
+        input.selectionStart = cursorPosition - 1;
+        input.selectionEnd = cursorPosition - 1;
+      } else {
+        input.selectionStart = cursorPosition - 1;
+        input.selectionEnd = cursorPosition - 1;
+      }
+    }
+  }
 }
 
 function handleKeyDown(event) {
@@ -85,6 +107,18 @@ function handleKeyDown(event) {
       input.selectionEnd = cursorPosition + 1;
     }
   }
+  if (event.ctrlKey && event.key === "c") {
+    input.select();
+    const selectedText = input.value;
+    navigator.clipboard
+      .writeText(selectedText)
+      .then(function () {
+        console.log("Texto copiado para o portador de clipes");
+      })
+      .catch(function (err) {
+        console.error("Erro ao copiar texto para o portador de clipes:", err);
+      });
+  }
   if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") {
     event.preventDefault();
   }
@@ -92,6 +126,7 @@ function handleKeyDown(event) {
 
 function handleKeyUp(event) {
   const input = event.target;
+  
   if (event.key === "Backspace") {
     const currentValue = input.value;
     const cursorPosition = parseInt(input.dataset.cursorPosition, 10);
@@ -105,7 +140,8 @@ function handleKeyUp(event) {
         input.selectionStart = cursorPosition - 1;
         input.selectionEnd = cursorPosition - 1;
       } else {
-        event.preventDefault();
+        input.selectionStart = cursorPosition - 1;
+        input.selectionEnd = cursorPosition - 1;
       }
     }
   }
@@ -117,6 +153,6 @@ function handleFocus(formattedMask, input) {
   }
 }
 
-document.addEventListener("DOMContentLoaded",initializeInputs)
+document.addEventListener("DOMContentLoaded", initializeInputs);
 
 module.exports = initializeInputs;
